@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Belajar React</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- Don't use this in production: -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+      .flex-col {
+        flex-direction: column;
+      }
+      .flex {
+        display: flex;
+      }
+      .gap {
+        gap: 1rem;
+      }
+      .w-max {
+        width: max-content;
+      }
+      .justify-center {
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const container = document.getElementById('root');
+      const root = ReactDOM.createRoot(container);
+
+      function Button({ name, action, ...props }) {
+        return (
+          <button onClick={action} {...props}>
+            {name}
+          </button>
+        );
+      }
+
+      function Display({ count }) {
+        return <span>{count > 10 || count < 0 ? 'Done!' : count}</span>;
+      }
+
+      function HomePage() {
+        const [count, setCount] = React.useState(0);
+
+        function reset() {
+          setCount(0);
+        }
+
+        function increment() {
+          setCount(count + 1);
+        }
+
+        function decrement() {
+          setCount(count - 1);
+        }
+
+        return (
+          <div className="flex flex-col gap justify-center">
+            <div className="flex gap">
+              <Button
+                name="-"
+                action={decrement}
+                disabled={count < 0 ? true : false}
+              />
+              <Display count={count} />
+              <Button
+                name="+"
+                action={increment}
+                disabled={count > 10 ? true : false}
+              />
+            </div>
+            <Button
+              name="Reset!"
+              action={reset}
+              className="w-max"
+              disabled={count > 10 || count < 0 ? false : true}
+            />
+          </div>
+        );
+      }
+
+      root.render(<HomePage />);
+    </script>
+  </body>
+</html>
