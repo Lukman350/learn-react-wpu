@@ -1,7 +1,12 @@
-export default function Footer() {
+export default function Footer({ items }) {
+  const totalItems = items.length;
+  const sudahDibeli = items.filter((item) => item.checked).length;
+  const persentase = Math.round((sudahDibeli / totalItems) * 100);
+
   return (
     <footer className="stats">
-      Ada 10 barang di daftar belanjaan, 5 barang sudah dibeli (50%)
+      Ada {totalItems} barang di daftar belanjaan, {sudahDibeli} barang sudah
+      dibeli ({isNaN(persentase) ? '0' : persentase}%)
     </footer>
   );
 }

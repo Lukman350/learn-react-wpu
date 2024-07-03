@@ -31,23 +31,23 @@ export default function App() {
     saveGrocery(newItem);
   };
 
-  const handleItemChecked = (event) => {
-    const item = event.target;
-    const findItem = items.find((grocery) => grocery.id === Number(item.id));
-    findItem.checked = item.checked;
-    const copiedItem = items.slice();
-    setItems(copiedItem);
-    saveGrocery(items);
+  const handleItemChecked = (id) => {
+    const item = items.map((item) =>
+      item.id === id ? { ...item, checked: !item.checked } : item
+    );
+    setItems(item);
+    saveGrocery(item);
   };
 
-  const handleItemDeleted = (event) => {
-    const itemId = event.target.getAttribute('data-id');
+  const handleItemDeleted = (id) => {
+    const item = items.filter((grocery) => grocery.id !== id);
+    setItems(item);
+    saveGrocery(item);
+  };
 
-    if (itemId) {
-      const item = items.filter((grocery) => grocery.id !== Number(itemId));
-      setItems(item);
-      saveGrocery(item);
-    }
+  const handleItemCleared = () => {
+    setItems([]);
+    saveGrocery([]);
   };
 
   return (
@@ -58,8 +58,9 @@ export default function App() {
         items={items}
         onItemChecked={handleItemChecked}
         onItemDeleted={handleItemDeleted}
+        onItemCleared={handleItemCleared}
       />
-      <Footer />
+      <Footer items={items} />
     </div>
   );
 }

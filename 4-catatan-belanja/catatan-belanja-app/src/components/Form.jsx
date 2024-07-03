@@ -19,8 +19,6 @@ export default function Form({ onAddItem }) {
 
     onAddItem(newItem);
 
-    console.log(newItem);
-
     setData({ name: '', quantity: 1 });
   };
 

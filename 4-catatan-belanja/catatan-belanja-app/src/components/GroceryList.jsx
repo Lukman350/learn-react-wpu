@@ -1,37 +1,38 @@
+import { useState } from 'react';
 import Items from './Items';
 
-// const groceryItems = [
-//   {
-//     id: 1,
-//     name: 'Kopi Bubuk',
-//     quantity: 2,
-//     checked: true,
-//   },
-//   {
-//     id: 2,
-//     name: 'Gula Pasir',
-//     quantity: 5,
-//     checked: false,
-//   },
-//   {
-//     id: 3,
-//     name: 'Air Mineral',
-//     quantity: 3,
-//     checked: false,
-//   },
-// ];
+export default function GroceryList({
+  items,
+  onItemChecked,
+  onItemDeleted,
+  onItemCleared,
+}) {
+  const [sortBy, setSortBy] = useState('input');
 
-export default function GroceryList({ items, onItemChecked, onItemDeleted }) {
+  let sortedItems;
+
+  switch (sortBy) {
+    case 'name':
+      sortedItems = items.slice().sort((a, b) => a.name.localeCompare(b.name));
+      break;
+    case 'checked':
+      sortedItems = items.slice().sort((a, b) => b.checked - a.checked);
+      break;
+    default:
+      sortedItems = items;
+      break;
+  }
+
   return (
     <>
       <div className="list">
         <ul>
-          {items.length < 1 && (
+          {sortedItems.length < 1 && (
             <li>
               <p>Hore, tidak ada catatan belanja</p>
             </li>
           )}
-          {items.map((grocery) => (
+          {sortedItems.map((grocery) => (
             <Items
               key={grocery.id}
               item={grocery}
@@ -42,12 +43,29 @@ export default function GroceryList({ items, onItemChecked, onItemDeleted }) {
         </ul>
       </div>
       <div className="actions">
-        <select>
+        <select
+          onChange={(event) => setSortBy(event.target.value)}
+          value={sortBy}
+        >
           <option value="input">Urutkan berdasarkan urutan input</option>
           <option value="name">Urutkan berdasarkan nama barang</option>
           <option value="checked">Urutkan berdasarkan ceklis</option>
         </select>
-        <button>Bersihkan Daftar</button>
+        <button
+          onClick={() => {
+            if (items.length < 1) {
+              alert('Tidak ada daftar belanja');
+              return;
+            }
+
+            if (confirm('Yakin ingin membersihkan daftar belanja?')) {
+              onItemCleared();
+              alert('Daftar belanja telah dihapus!');
+            }
+          }}
+        >
+          Bersihkan Daftar
+        </button>
       </div>
     </>
   );
